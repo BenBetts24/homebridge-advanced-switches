@@ -1,6 +1,6 @@
 import type { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 
-import type { ExampleHomebridgePlatform } from './platform.js';
+import type { AdvancedSwitches } from './platform.js';
 
 /**
  * Platform Accessory
@@ -20,7 +20,7 @@ export class ExamplePlatformAccessory {
   };
 
   constructor(
-    private readonly platform: ExampleHomebridgePlatform,
+    private readonly platform: AdvancedSwitches,
     private readonly accessory: PlatformAccessory,
   ) {
     // set accessory information
@@ -97,6 +97,8 @@ export class ExamplePlatformAccessory {
   async setOn(value: CharacteristicValue) {
     // implement your own code to turn your device on/off
     this.exampleStates.On = value as boolean;
+
+    this.service.updateCharacteristic(this.platform.Characteristic.On, value as boolean);
 
     this.platform.log.debug('Set Characteristic On ->', value);
   }
