@@ -10,9 +10,9 @@ import {
 } from 'homebridge';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js';
-import type { DeviceConfig } from './deviceConfig.js';
+import type { DeviceConfig } from './DeviceConfig.js';
 
-import { StatefulSwitch } from './switches/statefulSwitch.js';
+import { StatefulSwitch } from './switches/StatefulSwitch.js';
 
 const CLASS_DEF = {
   statefulswitch: StatefulSwitch,

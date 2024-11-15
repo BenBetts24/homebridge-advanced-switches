@@ -1,7 +1,7 @@
 import type { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 
 import type { AdvancedSwitches } from '../platform.js';
-import type { DeviceConfig } from '../deviceConfig.js'; 
+import type { DeviceConfig } from '../DeviceConfig.js'; 
 
 /**
  * Stateful Switch
