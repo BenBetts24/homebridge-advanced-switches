@@ -2,15 +2,44 @@
   "pluginAlias": "AdvancedSwitches",
   "pluginType": "platform",
   "singular": true,
+  "headerDisplay": "Thanks for using Advanced Switches.",
+  "footerDisplay": "",
   "strictValidation": false,
   "schema": {
     "type": "object",
     "properties": {
-      "name": {
-        "title": "Name",
-        "type": "string",
-        "required": true,
-        "default": "Example Dynamic Platform"
+      "devices": {
+        "title": "Devices",
+        "type": "array",
+        "orderable": true,
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "title": "Switch Type",
+              "type": "string",
+              "required": true,
+              "default": "null",
+              "pattern": "^(?!null$).*",
+              "oneOf": [
+                {
+                  "title": "Select switch type...",
+                  "enum": ["null"]
+                },
+                {
+                  "title": "Stateful Switch",
+                  "enum": ["StatefulSwitch"]
+                }
+              ]
+            },
+            "name": {
+              "type": "string",
+              "description": "The name you'd like to use to identify this device. You can always change this later.",
+              "required": true
+            }
+            
+          }
+        }
       }
     }
   }
