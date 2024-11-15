@@ -1,7 +1,7 @@
-import type { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
+import type { CharacteristicValue, PlatformAccessory } from 'homebridge';
 
 import type { AdvancedSwitches } from '../platform.js';
-import type { DeviceConfig } from '../DeviceConfig.js'; 
+import { BaseSwitch } from './BaseSwitch.js';
 
 /**
  * Stateful Switch
@@ -9,42 +9,28 @@ import type { DeviceConfig } from '../DeviceConfig.js';
  * A basic stateful switch for use in conditional automations.
  * Once turned set on or off, it will remain in that state until changed.
  */
-export class StatefulSwitch {
-  private config: DeviceConfig;
-  private onService: Service;
-
+export class StatefulSwitch extends BaseSwitch {
   constructor(
-    private readonly platform: AdvancedSwitches,
-    private readonly accessory: PlatformAccessory,
+    platform: AdvancedSwitches,
+    accessory: PlatformAccessory,
   ) {
-    this.config = accessory.context.config as DeviceConfig;
+    super(platform, accessory);
+    this.setupSwitchService();
+  }
 
-    // Set accessory information
-    this.accessory.getService(this.platform.Service.AccessoryInformation)!
-      .setCharacteristic(this.platform.Characteristic.Name, this.config.name)
-      .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Advanced Switches')
-      .setCharacteristic(this.platform.Characteristic.Model, 'Stateful Switch')
-      .setCharacteristic(this.platform.Characteristic.SerialNumber, '12345678');
+  private setupSwitchService() {
+    // Set the current 'On' value to whatever is stored, or false if there isn't existing state.
+    this.updateOn(this.accessory.context.isOn);
 
-    // Get the ON service if it exists or create a new one if it doesn't
-    this.onService = this.accessory.getService(this.platform.Service.Switch) || this.accessory.addService(this.platform.Service.Switch);
-
-    // Set the current 'on' value to whatever is stored, or false there isn't existing state.
-    this.onService.updateCharacteristic(this.platform.Characteristic.On, accessory.context.isOn as boolean);
-
-    // Register a setter/getter for the 'on' characteristic
-    this.onService.getCharacteristic(this.platform.Characteristic.On)
+    // Register a setter/getter for the 'On' characteristic
+    this.onCharacteristic
       .onSet(this.setOn.bind(this));
   }
 
-  /**
-   * Handle "SET" requests from HomeKit
-   * These are sent when the user changes the state of an accessory, for example, turning on a Light bulb.
-   */
-  async setOn(value: CharacteristicValue) {
+  private async setOn(value: CharacteristicValue) {
     this.accessory.context.isOn = value as boolean;
     this.platform.api.updatePlatformAccessories([this.accessory]);
-    this.onService.updateCharacteristic(this.platform.Characteristic.On, value as boolean);
+    this.updateOn(value as boolean);
     this.platform.log.debug('Set Characteristic On ->', value);
   }
 }

@@ -1,4 +1,4 @@
 export interface DeviceConfig {
-    type: string;
-    name: string;
+  type: string;
+  name: string;
 }
